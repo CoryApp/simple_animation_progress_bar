@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../simple_animation_progress_bar_platform_interface.dart';
 
@@ -14,7 +16,6 @@ class SimpleAnimationProgressBar extends StatefulWidget {
       required this.ratio,
       required this.width,
       required this.height,
-      required this.direction,
       this.borderRadius,
       this.border,
       required this.backgroundColor,
@@ -24,15 +25,16 @@ class SimpleAnimationProgressBar extends StatefulWidget {
       this.reverseAlignment,
       this.waitDelay,
       this.gradientColor,
-      this.boxShadow});
+      this.boxShadow,
+      required this.glowColor});
   final double ratio; //Sets the progress bar value
   final double width; //Sets progress bar width
   final double height; //Sets progress bar height
-  final Axis
-      direction; //Allows to set the progress bar direction horizontally and vertically
+
   final BorderRadius? borderRadius; //Gives border radius for progress bar
   final Border? border; //Gives border radius for progress bar
   final Color backgroundColor; //Sets the background of the progress bar
+  final Color glowColor; //Sets the background of the progress bar
   final Color foregrondColor; //Sets the foreground of the progress bar
   final Duration duration; //Sets the animation speed in the progress bar
   final Curve curve; //Sets the animation type
@@ -103,52 +105,12 @@ class _SimpleAnimationProgressBarState
                 border: widget.border,
                 borderRadius: widget.borderRadius,
               ),
-              child: (widget.direction == Axis.horizontal)
-                  ? _HorizontalBar(
-                      widget: widget,
-                      ratio: ratio.value,
-                    )
-                  : _VerticalBar(
-                      widget: widget,
-                      ratio: ratio.value,
-                    ));
+              child: _HorizontalBar(
+                widget: widget,
+                ratio: ratio.value,
+                glowColor: widget.glowColor,
+              ));
         });
-  }
-}
-
-class _VerticalBar extends StatelessWidget {
-  const _VerticalBar({
-    required this.widget,
-    required this.ratio,
-  });
-
-  final SimpleAnimationProgressBar
-      widget; //Widget variable is created so that the values ​​from the main class can be read.
-  final double
-      ratio; //Ratio variable is created so that the animation value can be read..
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      //The Align widget is used for the direction of the AnimatedContainer. It reverses the direction of the progress bar according to the incoming direction.
-      alignment: (widget.reverseAlignment == true)
-          ? Alignment.topCenter
-          : Alignment.bottomCenter,
-      child: AnimatedContainer(
-        //Animated Container Widget is used for animation.
-        duration: widget.duration,
-        curve: widget.curve,
-        alignment: Alignment.centerLeft,
-        height: (ratio * widget.height) / 1,
-        width: widget.width,
-        decoration: BoxDecoration(
-          gradient:
-              (widget.gradientColor != null) ? widget.gradientColor : null,
-          color: (widget.gradientColor != null) ? null : widget.foregrondColor,
-          borderRadius: widget.borderRadius,
-          boxShadow: (widget.boxShadow != null) ? widget.boxShadow : null,
-        ),
-      ),
-    );
   }
 }
 
@@ -156,34 +118,66 @@ class _HorizontalBar extends StatelessWidget {
   const _HorizontalBar({
     required this.widget,
     required this.ratio,
+    required this.glowColor,
   });
 
-  final SimpleAnimationProgressBar
-      widget; //Widget variable is created so that the values ​​from the main class can be read.
-  final double
-      ratio; //Ratio variable is created so that the animation value can be read..
+  final SimpleAnimationProgressBar widget;
+  final Color glowColor;
+  final double ratio;
   @override
   Widget build(BuildContext context) {
-    return Align(
-      //The Align widget is used for the direction of the AnimatedContainer. It reverses the direction of the progress bar according to the incoming direction.
-      alignment: (widget.reverseAlignment == true)
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
-      child: AnimatedContainer(
-        //Animated Container Widget is used for animation.
-        duration: widget.duration,
-        curve: widget.curve,
-        alignment: Alignment.centerLeft,
-        height: widget.height,
-        width: (ratio * widget.width) / 1,
-        decoration: BoxDecoration(
-          gradient:
-              (widget.gradientColor != null) ? widget.gradientColor : null,
-          color: (widget.gradientColor != null) ? null : widget.foregrondColor,
-          borderRadius: widget.borderRadius,
-          boxShadow: (widget.boxShadow != null) ? widget.boxShadow : null,
+    final width = (ratio * widget.width) / 1;
+    return Stack(
+      children: [
+        Align(
+          //The Align widget is used for the direction of the AnimatedContainer. It reverses the direction of the progress bar according to the incoming direction.
+          alignment: (widget.reverseAlignment == true)
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          child: Stack(
+            children: [
+              AnimatedContainer(
+                //Animated Container Widget is used for animation.
+                duration: widget.duration,
+                curve: widget.curve,
+                alignment: Alignment.centerLeft,
+                height: widget.height,
+                width: width,
+                decoration: BoxDecoration(
+                  gradient: (widget.gradientColor != null)
+                      ? widget.gradientColor
+                      : null,
+                  color: (widget.gradientColor != null)
+                      ? null
+                      : widget.foregrondColor,
+                  borderRadius: widget.borderRadius,
+                  boxShadow:
+                      (widget.boxShadow != null) ? widget.boxShadow : null,
+                ),
+              ),
+              AnimatedContainer(
+                duration: widget.duration,
+                curve: widget.curve,
+                width: width,
+                height: widget.height,
+                decoration: const BoxDecoration(color: Colors.transparent),
+                padding: EdgeInsets.fromLTRB(
+                  widget.width / 20,
+                  widget.height / 6,
+                  widget.width / 20,
+                  widget.height / 2,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade800,
+                    borderRadius: widget.borderRadius,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

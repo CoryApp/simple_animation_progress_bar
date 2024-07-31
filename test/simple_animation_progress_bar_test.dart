@@ -29,7 +29,7 @@ void main() {
       backgroundColor: Colors.grey.shade800,
       foregrondColor: Colors.blue,
       ratio: 0.5,
-      direction: Axis.horizontal,
+      glowColor: Colors.grey.shade800,
       curve: Curves.fastLinearToSlowEaseIn,
       duration: const Duration(seconds: 3),
       borderRadius: BorderRadius.circular(10),
