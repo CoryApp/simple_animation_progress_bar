@@ -70,7 +70,7 @@ class _SimpleAnimationProgressBarTestPageState
                 height: 50,
                 width: 400,
                 backgroundColor: Colors.grey.shade800,
-                foregrondColor: Colors.purple,
+                foregroundColor: Colors.purple,
                 glowColor: Colors.grey.shade800,
                 ratio: ratio,
                 curve: Curves.fastLinearToSlowEaseIn,

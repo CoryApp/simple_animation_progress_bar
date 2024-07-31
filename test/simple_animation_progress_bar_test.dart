@@ -27,7 +27,7 @@ void main() {
       height: 30,
       width: 300,
       backgroundColor: Colors.grey.shade800,
-      foregrondColor: Colors.blue,
+      foregroundColor: Colors.blue,
       ratio: 0.5,
       glowColor: Colors.grey.shade800,
       curve: Curves.fastLinearToSlowEaseIn,
