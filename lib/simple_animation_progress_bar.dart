@@ -123,57 +123,51 @@ class _HorizontalBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = (ratio * widget.width) / 1;
-    return Stack(
-      children: [
-        Align(
-          //The Align widget is used for the direction of the AnimatedContainer. It reverses the direction of the progress bar according to the incoming direction.
-          alignment: (widget.reverseAlignment == true)
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
-          child: Stack(
-            children: [
-              AnimatedContainer(
-                //Animated Container Widget is used for animation.
-                duration: widget.duration,
-                curve: widget.curve,
-                alignment: Alignment.centerLeft,
-                height: widget.height,
-                width: width,
-                decoration: BoxDecoration(
-                  gradient: (widget.gradientColor != null)
-                      ? widget.gradientColor
-                      : null,
-                  color: (widget.gradientColor != null)
-                      ? null
-                      : widget.foregroundColor,
-                  borderRadius: widget.borderRadius,
-                  boxShadow:
-                      (widget.boxShadow != null) ? widget.boxShadow : null,
-                ),
-              ),
-              AnimatedContainer(
-                duration: widget.duration,
-                curve: widget.curve,
-                width: width,
-                height: widget.height,
-                decoration: const BoxDecoration(color: Colors.transparent),
-                padding: EdgeInsets.fromLTRB(
-                  widget.width / 20,
-                  widget.height / 6,
-                  widget.width / 20,
-                  widget.height / 2,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: glowColor,
-                    borderRadius: widget.borderRadius,
-                  ),
-                ),
-              ),
-            ],
+    return Align(
+      //The Align widget is used for the direction of the AnimatedContainer. It reverses the direction of the progress bar according to the incoming direction.
+      alignment: (widget.reverseAlignment == true)
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
+      child: Stack(
+        children: [
+          AnimatedContainer(
+            //Animated Container Widget is used for animation.
+            duration: widget.duration,
+            curve: widget.curve,
+            alignment: Alignment.centerLeft,
+            height: widget.height,
+            width: width,
+            decoration: BoxDecoration(
+              gradient:
+                  (widget.gradientColor != null) ? widget.gradientColor : null,
+              color: (widget.gradientColor != null)
+                  ? null
+                  : widget.foregroundColor,
+              borderRadius: widget.borderRadius,
+              boxShadow: (widget.boxShadow != null) ? widget.boxShadow : null,
+            ),
           ),
-        ),
-      ],
+          AnimatedContainer(
+            duration: widget.duration,
+            curve: widget.curve,
+            width: width,
+            height: widget.height,
+            decoration: const BoxDecoration(color: Colors.transparent),
+            padding: EdgeInsets.fromLTRB(
+              widget.width / 20,
+              widget.height / 6,
+              widget.width / 20,
+              widget.height / 2,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: glowColor,
+                borderRadius: widget.borderRadius,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
