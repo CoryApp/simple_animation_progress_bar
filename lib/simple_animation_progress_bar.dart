@@ -9,7 +9,8 @@ class SimpleAnimationProgressBar extends StatefulWidget {
 
   const SimpleAnimationProgressBar(
       {super.key,
-      required this.ratio,
+      required this.currentStep,
+      required this.totalStep,
       required this.width,
       required this.height,
       this.borderRadius,
@@ -22,8 +23,11 @@ class SimpleAnimationProgressBar extends StatefulWidget {
       this.waitDelay,
       this.gradientColor,
       this.boxShadow,
+      this.dividerWidth = 1,
+      this.dividerColor = Colors.black,
       required this.glowColor});
-  final double ratio; //Sets the progress bar value
+  final int currentStep;
+  final int totalStep;
   final double width; //Sets progress bar width
   final double height; //Sets progress bar height
 
@@ -39,6 +43,9 @@ class SimpleAnimationProgressBar extends StatefulWidget {
   final Duration? waitDelay; //Sets you to delay the start of animation
   final Gradient? gradientColor; //Sets gardient color in progress bar
   final List<BoxShadow>? boxShadow; //Sets shadow in progress bar
+
+  final Color dividerColor;
+  final double dividerWidth;
   @override
   State<SimpleAnimationProgressBar> createState() =>
       _SimpleAnimationProgressBarState();
@@ -48,6 +55,7 @@ class _SimpleAnimationProgressBarState
     extends State<SimpleAnimationProgressBar> {
   ValueNotifier<double> ratio = ValueNotifier(
       0); //Since the ratio value can change again with the new value, it is defined as ValueNotifier.
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +73,7 @@ class _SimpleAnimationProgressBarState
                 Duration() command is used to transfer the value later and
                 display it as animated by the animated container.
                 */
-                ratio.value = widget.ratio;
+                ratio.value = widget.currentStep / widget.totalStep;
               },
             );
     }
@@ -73,7 +81,10 @@ class _SimpleAnimationProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    if (ratio.value != widget.ratio) {
+    final progressRatio = widget.currentStep / widget.totalStep;
+    print(
+        'logger ||${widget.totalStep} || ${widget.currentStep} || progressRatio $progressRatio');
+    if (ratio.value != progressRatio) {
       /*
       Here, a condition is created for the values ​​that may come after the ratio value is defined.
       This condition sets the new incoming value equal to the ratio value.
@@ -85,7 +96,7 @@ class _SimpleAnimationProgressBarState
                 Duration() command is used to transfer the value later and
                 display it as animated by the animated container.
                 */
-        ratio.value = widget.ratio;
+        ratio.value = progressRatio;
       });
     }
     return ValueListenableBuilder(
@@ -101,11 +112,7 @@ class _SimpleAnimationProgressBarState
                 border: widget.border,
                 borderRadius: widget.borderRadius,
               ),
-              child: _HorizontalBar(
-                widget: widget,
-                ratio: ratio.value,
-                glowColor: widget.glowColor,
-              ));
+              child: _HorizontalBar(widget: widget));
         });
   }
 }
@@ -113,16 +120,14 @@ class _SimpleAnimationProgressBarState
 class _HorizontalBar extends StatelessWidget {
   const _HorizontalBar({
     required this.widget,
-    required this.ratio,
-    required this.glowColor,
   });
 
   final SimpleAnimationProgressBar widget;
-  final Color glowColor;
-  final double ratio;
+
   @override
   Widget build(BuildContext context) {
-    final width = (ratio * widget.width) / 1;
+    final ratio = widget.currentStep / widget.totalStep;
+    final width = ((ratio >= 1 ? 1 : ratio) * widget.width) / 1;
     return Align(
       //The Align widget is used for the direction of the AnimatedContainer. It reverses the direction of the progress bar according to the incoming direction.
       alignment: (widget.reverseAlignment == true)
@@ -161,10 +166,20 @@ class _HorizontalBar extends StatelessWidget {
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: glowColor,
+                color: widget.glowColor,
                 borderRadius: widget.borderRadius,
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(widget.totalStep - 1, (index) {
+              return Container(
+                height: widget.height,
+                width: widget.dividerWidth,
+                color: widget.dividerColor,
+              );
+            }),
           ),
         ],
       ),

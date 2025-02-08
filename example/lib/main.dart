@@ -42,13 +42,14 @@ class SimpleAnimationProgressBarTestPage extends StatefulWidget {
 
 class _SimpleAnimationProgressBarTestPageState
     extends State<SimpleAnimationProgressBarTestPage> {
-  double ratio = 0;
+  final totalStep = 3;
+  int currentStep = 0;
   void startDemo() async {
-    setState(() => ratio = 0);
+    setState(() => currentStep = 0);
 
-    for (int i = 0; i < 10; i++) {
-      await Future.delayed(const Duration(seconds: 2), () {
-        setState(() => ratio += 0.1);
+    for (int i = 0; i < totalStep; i++) {
+      await Future.delayed(const Duration(seconds: 1), () {
+        setState(() => currentStep += 1);
       });
     }
   }
@@ -72,7 +73,9 @@ class _SimpleAnimationProgressBarTestPageState
                 backgroundColor: Colors.grey.shade800,
                 foregroundColor: Colors.purple,
                 glowColor: Colors.grey.shade800,
-                ratio: ratio,
+                totalStep: totalStep,
+                currentStep: currentStep,
+                dividerWidth: 2,
                 curve: Curves.fastLinearToSlowEaseIn,
                 duration: const Duration(seconds: 2),
                 borderRadius: BorderRadius.circular(24),
