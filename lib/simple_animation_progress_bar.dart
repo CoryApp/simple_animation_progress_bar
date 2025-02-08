@@ -7,25 +7,27 @@ class SimpleAnimationProgressBar extends StatefulWidget {
     return SimpleAnimationProgressBarPlatform.instance.getPlatformVersion();
   }
 
-  const SimpleAnimationProgressBar(
-      {super.key,
-      required this.currentStep,
-      required this.totalStep,
-      required this.width,
-      required this.height,
-      this.borderRadius,
-      this.border,
-      required this.backgroundColor,
-      required this.foregroundColor,
-      required this.duration,
-      required this.curve,
-      this.reverseAlignment,
-      this.waitDelay,
-      this.gradientColor,
-      this.boxShadow,
-      this.dividerWidth = 1,
-      this.dividerColor = Colors.black,
-      required this.glowColor});
+  const SimpleAnimationProgressBar({
+    super.key,
+    required this.currentStep,
+    required this.totalStep,
+    required this.width,
+    required this.height,
+    this.borderRadius,
+    this.border,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.duration,
+    required this.curve,
+    this.reverseAlignment,
+    this.waitDelay,
+    this.gradientColor,
+    this.boxShadow,
+    this.dividerWidth = 1,
+    this.dividerColor = Colors.black,
+    this.hideDivider = true,
+    required this.glowColor,
+  });
   final int currentStep;
   final int totalStep;
   final double width; //Sets progress bar width
@@ -46,6 +48,7 @@ class SimpleAnimationProgressBar extends StatefulWidget {
 
   final Color dividerColor;
   final double dividerWidth;
+  final bool hideDivider;
   @override
   State<SimpleAnimationProgressBar> createState() =>
       _SimpleAnimationProgressBarState();
@@ -171,15 +174,18 @@ class _HorizontalBar extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(widget.totalStep - 1, (index) {
-              return Container(
-                height: widget.height,
-                width: widget.dividerWidth,
-                color: widget.dividerColor,
-              );
-            }),
+          Offstage(
+            offstage: widget.hideDivider,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(widget.totalStep - 1, (index) {
+                return Container(
+                  height: widget.height,
+                  width: widget.dividerWidth,
+                  color: widget.dividerColor,
+                );
+              }),
+            ),
           ),
         ],
       ),
