@@ -85,8 +85,7 @@ class _SimpleAnimationProgressBarState
   @override
   Widget build(BuildContext context) {
     final progressRatio = widget.currentStep / widget.totalStep;
-    print(
-        'logger ||${widget.totalStep} || ${widget.currentStep} || progressRatio $progressRatio');
+
     if (ratio.value != progressRatio) {
       /*
       Here, a condition is created for the values ​​that may come after the ratio value is defined.
